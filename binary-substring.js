@@ -9,7 +9,7 @@
  * 解释: 有6个子串具有相同数量的连续1和0：“0011”，“01”，“1100”，“10”，“0011” 和 “01”。
  */
 
-function tool(str) {
+function countBinarySubstrings1(str) {
     let result = []
     for (let i = 0; i < str.length - 1; i++) {
         let res = match(str.slice(i))
@@ -31,4 +31,58 @@ function tool(str) {
     return result.length
 }
 
-console.log(tool("11001100"))
+function countBinarySubstrings2(str) {
+    let groups = []
+    let prev = 0,cur = 1, result = 0
+    for (i = 1; i < str.length; i++) {
+        if (str[i] !== str[i-1]) {
+            prev = cur
+            groups.push(prev)
+            cur = 1
+        } else {
+            cur++
+        }
+        if (i === str.length - 1) {
+            groups.push(cur)
+        }
+    }
+    for (i = 1; i < groups.length; i++) {
+        result += Math.min(groups[i], groups[i - 1])
+    }
+    return result
+}
+
+function countBinarySubstrings3(str) {
+    let prev = 0,cur = 1, result = 0
+    for (i = 1; i < str.length; i++) {
+        if (str[i] !== str[i-1]) {
+            result += Math.min(prev, cur)
+            prev = cur
+            cur = 1
+        } else {
+            cur++
+        }
+        if (i === str.length - 1) {
+            result += Math.min(prev, cur)
+        }
+    }
+    return result
+}
+
+function countBinarySubstrings4(str) {
+    let prev = 0,cur = 1, result = 0
+    for (i = 1; i < str.length; i++) {
+        if (str[i] !== str[i-1]) {
+            prev = cur
+            cur = 1
+        } else {
+            cur++
+        }
+        if (prev >= cur) result++
+    }
+    return result
+}
+
+console.time('共花费')
+console.log(countBinarySubstrings4("11000111000000"))
+console.timeEnd('共花费')
